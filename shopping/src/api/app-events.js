@@ -1,8 +1,8 @@
-const CustomerService = require("../services/customer-service");
+const ShoppingService = require("../services/shopping-service");
 
 module.exports = (app) => {
 
-	const service = new CustomerService();
+	const service = new ShoppingService();
 
 	app.use("/app-events", async (req, res, next) => {
 
@@ -10,7 +10,7 @@ module.exports = (app) => {
 
 		service.SubscribeEvents(payload);
 
-		console.log("+++++++++ Customer Service Received Event +++++++++");
+		console.log("+++++++++ Shopping Service Received Event +++++++++");
 
 		return res.status(200).json(payload);
 	});

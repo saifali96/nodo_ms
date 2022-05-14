@@ -75,7 +75,7 @@ class ProductService {
         }
     }
     
-	async GetProductPayload(user, { productId, qty }, event){
+	async GetProductPayload(userId, { productId, qty }, event){
         
 		const product = await this.repository.FindById(productId);
 

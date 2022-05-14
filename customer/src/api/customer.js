@@ -66,11 +66,11 @@ module.exports = (app) => {
     });
      
 
-    app.get('/shoping-details', UserAuth, async (req,res,next) => {
+    app.get('/shopping-details', UserAuth, async (req,res,next) => {
         
         try {
             const { _id } = req.user;
-           const { data } = await service.GetShopingDetails(_id);
+           const { data } = await service.GetShoppingDetails(_id);
     
            return res.json(data);
             

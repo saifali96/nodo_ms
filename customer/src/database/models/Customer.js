@@ -17,7 +17,7 @@ const CustomerSchema = new Schema({
 			  banner: { type: String },
 			  price: { type: Number }
 		  },
-		  unit: { type: Number, require: true}
+		  unit: { type: Number, require: true }
 		}
 	],
 	wishlist:[
