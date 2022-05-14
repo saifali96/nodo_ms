@@ -8,13 +8,13 @@ module.exports.GenerateSalt = async() => {
         return await bcrypt.genSalt()    
 },
 
-module.exports.GeneratePassword = async (password, salt) => {
-        return await bcrypt.hash(password, salt);
+module.exports.GeneratePassword = async (password) => {
+        return await bcrypt.hash(password, await this.GenerateSalt());
 };
 
 
-module.exports.ValidatePassword = async (enteredPassword, savedPassword, salt) => {
-        return await this.GeneratePassword(enteredPassword, salt) === savedPassword;
+module.exports.ValidatePassword = async (enteredPassword, savedPassword) => {
+        return await bcrypt.compare(enteredPassword, savedPassword);
 };
 
 module.exports.GenerateSignature = async (payload) => {
@@ -36,10 +36,10 @@ module.exports.ValidateSignature  = async(req) => {
         return false
 };
 
-module.exports.FormateData = (data) => {
+module.exports.FormatData = (data) => {
         if(data){
             return { data }
-        }else{
+        } else {
             throw new Error('Data Not found!')
         }
     }
