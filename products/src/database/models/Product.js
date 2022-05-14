@@ -9,8 +9,8 @@ const ProductSchema = new Schema({
     type: String,
     unit: Number,
     price: Number,
-    available: Boolean,
-    suplier: String
+    isAvailable: Boolean,
+    supplier: String
 });
 
 module.exports =  mongoose.model('product', ProductSchema);
