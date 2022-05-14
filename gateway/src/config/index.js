@@ -10,7 +10,8 @@ if (process.env.NODE_ENV !== "prod") {
 module.exports = {
 
     PORT: process.env.PORT,
-    DB_URL: process.env.MONGO_URI,
-    APP_SECRET: process.env.JWT_SECRET
+    MS_CUSTOMER_URL: process.env.MS_CUSTOMER_URL,
+    MS_PRODUCTS_URL: process.env.MS_PRODUCTS_URL,
+    MS_SHOPPING_URL: process.env.MS_SHOPPING_URL
 }
  
