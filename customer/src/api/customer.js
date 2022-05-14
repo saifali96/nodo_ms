@@ -9,7 +9,7 @@ module.exports = (app) => {
 		try {
 			const { email, password, phone } = req.body;
 			const { data } = await service.SignUp({ email, password, phone }); 
-			return res.json({ success: true, message: { data }});
+			return res.status(200).json({ success: true, message: { data }});
 			
 		} catch (err) {
 			next(err)
@@ -26,7 +26,7 @@ module.exports = (app) => {
 			const { data } = await service.SignIn({ email, password });
 	
 			if(data)
-				return res.json({ success: true, message: data });
+				return res.status(200).json({ success: true, message: data });
 
 		} catch (err) {
 			next(err)
@@ -44,7 +44,7 @@ module.exports = (app) => {
 	
 			const { data } = await service.AddNewAddress( _id ,{ street, postalCode, city,country});
 	
-			return res.json(data);
+			return res.status(200).json(data);
 
 		} catch (err) {
 			next(err)
@@ -59,7 +59,7 @@ module.exports = (app) => {
 		try {
 			const { _id } = req.user;
 			const { data } = await service.GetProfile({ _id });
-			return res.json(data);
+			return res.status(200).json(data);
 			
 		} catch (err) {
 			next(err)
@@ -73,7 +73,7 @@ module.exports = (app) => {
 			const { _id } = req.user;
 		   const { data } = await service.GetShoppingDetails(_id);
 	
-		   return res.json(data);
+		   return res.status(200).json(data);
 			
 		} catch (err) {
 			next(err)
