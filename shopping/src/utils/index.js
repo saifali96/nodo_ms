@@ -9,13 +9,13 @@ module.exports.GenerateSalt = async() => {
         return await bcrypt.genSalt()    
 },
 
-module.exports.GeneratePassword = async (password, salt) => {
-        return await bcrypt.hash(password, salt);
+module.exports.GeneratePassword = async (password) => {
+        return await bcrypt.hash(password, await this.GenerateSalt());
 };
 
 
-module.exports.ValidatePassword = async (enteredPassword, savedPassword, salt) => {
-        return await this.GeneratePassword(enteredPassword, salt) === savedPassword;
+module.exports.ValidatePassword = async (enteredPassword, savedPassword) => {
+        return await bcrypt.compare(enteredPassword, savedPassword);
 };
 
 module.exports.GenerateSignature = async (payload) => {
@@ -29,7 +29,7 @@ module.exports.ValidateSignature  = async(req) => {
         console.log(signature);
         
         if(signature){
-            const payload = await jwt.verify(signature.split(' ')[1], APP_SECRET);
+            const payload = await jwt.verify(signature, APP_SECRET);
             req.user = payload;
             return true;
         }
@@ -40,10 +40,11 @@ module.exports.ValidateSignature  = async(req) => {
 module.exports.FormatData = (data) => {
         if(data){
             return { data }
-        }else{
+        } else {
             throw new Error('Data Not found!')
         }
     }
+
 
 module.exports.PublishCustomerEvent = async (payload) => {
 
