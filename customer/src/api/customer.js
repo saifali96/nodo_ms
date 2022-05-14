@@ -23,9 +23,10 @@ module.exports = (app) => {
 			
 			const { email, password } = req.body;
 	
-			const { data } = await service.SignIn({ email, password});
+			const { data } = await service.SignIn({ email, password });
 	
-			return res.json(data);
+			if(data)
+				return res.json({ success: true, message: data });
 
 		} catch (err) {
 			next(err)

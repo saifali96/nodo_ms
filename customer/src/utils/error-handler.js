@@ -26,7 +26,7 @@ class ErrorLogger {
 
 }
 
-const ErrorHandler = async(err, req, res, next) => {
+const ErrorHandler = async (err, req, res, next) => {
 	
 	const errorLogger = new ErrorLogger();
 
@@ -42,9 +42,12 @@ const ErrorHandler = async(err, req, res, next) => {
 	})
 	
 	if(err){
-		console.log(err);
 		await errorLogger.logError(err);
 		// TODO - Restart gracefully on special errors.
+
+		if(JSON.stringify(err.data.log) !== "{}") {
+			return res.status(err.statusCode).json({ success: false, message: err.data.log });
+		}
 		return res.status(err.statusCode).json({ success: false, message: err })
 	}
 	next();

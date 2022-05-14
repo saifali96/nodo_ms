@@ -17,22 +17,22 @@ class CustomerService {
 		
 		try {
 			
-			const existingCustomer = await this.repository.FindCustomer({ email});
+			const existingCustomer = await this.repository.FindCustomer({ email });
 
 			if(existingCustomer){
 			
-				const validPassword = await ValidatePassword(password, existingCustomer.password, existingCustomer.salt);
+				const validPassword = await ValidatePassword(password, existingCustomer.password);
 				
 				if(validPassword){
-					const token = await GenerateSignature({ email: existingCustomer.email, _id: existingCustomer._id});
-					return FormatData({id: existingCustomer._id, token });
+					const token = await GenerateSignature({ email, _id: existingCustomer._id});
+					return FormatData({ id: existingCustomer._id, token });
 				} 
 			}
 	
 			return FormatData(null);
 
 		} catch (err) {
-			throw new APIError('Data Not found', err)
+			throw new APIError("Unable to login user.", err);
 		}
 
 	   
@@ -46,7 +46,6 @@ class CustomerService {
 
 			const userPassword = await GeneratePassword(password);
 			
-			// TODO - Check if user exists
 			const isExisting = await CustomerModel.findOne({ email });
 
 			if(isExisting) {
@@ -54,10 +53,10 @@ class CustomerService {
 			}
 
 			const createCustomer = await this.repository.CreateCustomer({ email, password: userPassword, phone });
-			
+			// TODO - Check if customer is created or not.
 			const token = await GenerateSignature({ email, _id: createCustomer._id});
 
-			return FormatData({ id: existingCustomer._id, token });
+			return FormatData({ id: createCustomer._id, token });
 
 		} catch (err){
 			throw new APIError('Unable to signup user.', err)
