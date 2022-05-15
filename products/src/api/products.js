@@ -13,10 +13,10 @@ module.exports = (app) => {
 			const { name, desc, type, unit, price, isAvailable, supplier, banner } = req.body; 
 			// validation
 			const { data } =  await service.CreateProduct({ name, desc, type, unit, price, isAvailable, supplier, banner });
-			return res.json(data);
+			return res.json({ success: true, message: data });
 			
 		} catch (err) {
-			next(err)    
+			next(err);
 		}
 		
 	});
