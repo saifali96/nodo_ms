@@ -44,7 +44,7 @@ module.exports = (app) => {
 	
 			const { data } = await service.AddNewAddress( _id ,{ street, postalCode, city,country});
 	
-			return res.status(200).json(data);
+			return res.status(200).json({ success: true, message: data });
 
 		} catch (err) {
 			next(err)
@@ -59,10 +59,10 @@ module.exports = (app) => {
 		try {
 			const { _id } = req.user;
 			const { data } = await service.GetProfile({ _id });
-			return res.status(200).json(data);
+			return res.status(200).json({ success: true, message: data });
 			
 		} catch (err) {
-			next(err)
+			next(err);
 		}
 	});
 	 
@@ -73,7 +73,7 @@ module.exports = (app) => {
 			const { _id } = req.user;
 		   const { data } = await service.GetShoppingDetails(_id);
 	
-		   return res.status(200).json(data);
+		   return res.status(200).json({ success: true, message: data });
 			
 		} catch (err) {
 			next(err)
@@ -84,7 +84,7 @@ module.exports = (app) => {
 		try {
 			const { _id } = req.user;
 			const { data } = await service.GetWishList( _id);
-			return res.status(200).json(data);
+			return res.status(200).json({ success: true, message: data });
 			
 		} catch (err) {
 			next(err)
