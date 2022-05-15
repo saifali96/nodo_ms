@@ -130,7 +130,7 @@ class CustomerService {
 			const cartResult = await this.repository.AddCartItem(customerId, product, qty, isRemove);        
 			return FormatData(cartResult);
 		} catch (err) {
-			throw new APIError('Data Not found', err)
+			throw new APIError("Unable to add item to cart.", err);
 		}
 	}
 

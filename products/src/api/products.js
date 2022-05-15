@@ -26,11 +26,11 @@ module.exports = (app) => {
 		const type = req.params.type;
 		
 		try {
-			const { data } = await service.GetProductsByCategory(type)
-			return res.status(200).json(data);
+			const { data } = await service.GetProductsByCategory(type);
+			return res.status(200).json({ success: true, message: data });
 
 		} catch (err) {
-			next(err)
+			next(err);
 		}
 
 	});
@@ -41,10 +41,10 @@ module.exports = (app) => {
 
 		try {
 			const { data } = await service.GetProductDescription(productId);
-			return res.status(200).json(data);
+			return res.status(200).json({ success: true, message: data });
 
 		} catch (err) {
-			next(err)
+			next(err);
 		}
 
 	});
@@ -54,15 +54,15 @@ module.exports = (app) => {
 		try {
 			const { ids } = req.body;
 			const products = await service.GetSelectedProducts(ids);
-			return res.status(200).json(products);
+			return res.status(200).json({success: true, message: products });
 			
 		} catch (err) {
-			next(err)
+			next(err);
 		}
 	   
 	});
 	 
-	app.put('/wishlist',UserAuth, async (req,res,next) => {
+	app.put('/wishlist', UserAuth, async (req,res,next) => {
 
 		const { _id } = req.user;
 		
@@ -71,13 +71,13 @@ module.exports = (app) => {
 		try {
 			const { data } = await service.GetProductPayload(_id, { productId: req.body._id }, "ADD_TO_WISHLIST");
 			PublishCustomerEvent(data);
-			return res.status(200).json(data.data.product);
+			return res.status(200).json({ success: true, message: data.data.product });
 		} catch (err) {
-			
+			next(err);
 		}
 	});
 	
-	app.delete('/wishlist/:id',UserAuth, async (req,res,next) => {
+	app.delete('/wishlist/:id', UserAuth, async (req,res,next) => {
 
 		const { _id } = req.user;
 		const productId = req.params.id;
@@ -85,9 +85,9 @@ module.exports = (app) => {
 		try {
 			const { data } = await service.GetProductPayload(_id, { productId }, "REMOVE_FROM_WISHLIST");
 			PublishCustomerEvent(data);
-			return res.status(200).json(data.data.product);
+			return res.status(200).json({ success: true, message: data.data.product });
 		} catch (err) {
-			next(err)
+			next(err);
 		}
 	});
 
@@ -102,13 +102,13 @@ module.exports = (app) => {
 			PublishCustomerEvent(data);
 			PublishShoppingEvent(data);
 
-			return res.status(200).json({
+			return res.status(200).json({success: true, message: {
 				product: data.data.product,
 				unit: data.data.qty
-			});
+			}});
 			
 		} catch (err) {
-			next(err)
+			next(err);
 		}
 	});
 	
@@ -122,12 +122,12 @@ module.exports = (app) => {
 			PublishCustomerEvent(data);
 			PublishShoppingEvent(data);
 
-			return res.status(200).json({
+			return res.status(200).json({ success: true, message: {
 				product: data.data.product,
 				unit: data.data.qty
-			});
+			}});
 		} catch (err) {
-			next(err)
+			next(err);
 		}
 	});
 
@@ -136,9 +136,9 @@ module.exports = (app) => {
 		//check validation
 		try {
 			const { data} = await service.GetProducts();        
-			return res.status(200).json(data);
+			return res.status(200).json({ success: true, message: data });
 		} catch (error) {
-			next(err)
+			next(err);
 		}
 		
 	});

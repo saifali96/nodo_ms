@@ -126,7 +126,7 @@ class CustomerRepository {
 
 			const profile = await CustomerModel.findById(customerId).populate('cart');
 	
-			if(profile){ 
+			if(profile){
 	 
 				const cartItem = {
 					product: { _id, name, desc, price, isAvailable, banner },
@@ -138,11 +138,11 @@ class CustomerRepository {
 				if(cartItems.length > 0){
 					let isExist = false;
 					 cartItems.map(item => {
-						if(item.product._id.toString() === product._id.toString()){
+						if(item.product._id.toString() === cartItem.product._id.toString()){
 							if(isRemove){
 								cartItems.splice(cartItems.indexOf(item), 1);
 							}else{
-								item.unit = qty;
+								item.unit += qty;
 							}
 							isExist = true;
 						}
@@ -151,7 +151,7 @@ class CustomerRepository {
 					if(!isExist){
 						cartItems.push(cartItem);
 					} 
-				}else{
+				} else {
 					cartItems.push(cartItem);
 				}
 	
@@ -165,7 +165,7 @@ class CustomerRepository {
 			throw new Error('Unable to add to cart!');
 
 		}catch(err){
-			throw APIError('API Error', STATUS_CODES.INTERNAL_ERROR, 'Unable to Create Customer')
+			throw new APIError('API Error', STATUS_CODES.INTERNAL_ERROR, "Unable to add item to cart.");
 		}
 
 	}
