@@ -82,7 +82,7 @@ class ShoppingService {
 		if(order) {
 			const payload = {
 				event,
-				data: { userId, product, qty }
+				data: { userId, order }
 			}
 
 			return FormatData(payload);

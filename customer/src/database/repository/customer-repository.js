@@ -192,7 +192,7 @@ class CustomerRepository {
 			
 			throw new Error('Unable to add to order!');
 
-		}catch(err){
+		} catch(err){
 			throw APIError('API Error', STATUS_CODES.INTERNAL_ERROR, 'Unable to Create Customer')
 		}
 		
