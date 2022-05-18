@@ -29,11 +29,9 @@ module.exports = (app) => {
 
 	app.get('/orders', UserAuth, async (req,res,next) => {
 
-		const { _id } = req.user;
-
 		try {
-			const { data } = await service.GetOrders(_id);
-			return res.status(200).json(data);
+			const { data } = await service.GetOrders(req.user._id);
+			return res.status(200).json({ success: true, message: data });
 		} catch (err) {
 			next(err);
 		}
@@ -43,10 +41,9 @@ module.exports = (app) => {
 	
 	app.get('/cart', UserAuth, async (req,res,next) => {
 
-		const { _id } = req.user;
 		try {
-			const { data } = await service.GetOrders(_id);
-			return res.status(200).json(data.cart);
+			const { data } = await service.getCart(req.user._id);
+			return res.status(200).json({ success: true, message: data });
 		} catch (err) {
 			next(err);
 		}

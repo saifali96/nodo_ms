@@ -4,14 +4,14 @@ const { FormatData } = require("../utils");
 // All Business logic will be here
 class ShoppingService {
 
-    constructor(){
-        this.repository = new ShoppingRepository();
-    }
+	constructor(){
+		this.repository = new ShoppingRepository();
+	}
 
-	async getCart({ id }) {
+	async getCart(id) {
 
 		try {
-			const cartItems = await this.repository.Cart(_id);
+			const cartItems = await this.repository.Cart(id);
 			
 			return FormatData(cartItems);
 		} catch (error) {
@@ -20,31 +20,30 @@ class ShoppingService {
 
 	} 
  
-    async PlaceOrder(userInput){
+	async PlaceOrder(userInput){
 
-        const { _id, txnNumber } = userInput
+		const { _id, txnNumber } = userInput
 
-        // Verify the txn number with payment logs
-        
-        try {
-            const orderResult = await this.repository.CreateNewOrder(_id, txnNumber);
-            return FormatData(orderResult);    
-        } catch (err) {
-            throw new APIError('Data Not found', err)
-        }
-        
-    }
+		// Verify the txn number with payment logs
+		
+		try {
+			const orderResult = await this.repository.CreateNewOrder(_id, txnNumber);
+			return FormatData(orderResult);    
+		} catch (err) {
+			throw new APIError('Data Not found', err)
+		}
+		
+	}
 
-    async GetOrders(customerId){
-        try {
-            const orders = await this.repository.Orders(customerId);
-            return FormatData(orders)
-        } catch (err) {
-            throw new APIError('Data Not found', err)
-        }
-    }
+	async GetOrders(customerId){
+		try {
+			const orders = await this.repository.Orders(customerId);
+			return FormatData(orders)
+		} catch (err) {
+			throw new APIError('Data Not found', err)
+		}
+	}
   
-	// Get order details
 	async ManageCart(customerId, item, qty, isRemove) {
 
 		try {
@@ -60,25 +59,25 @@ class ShoppingService {
 
 	async SubscribeEvents(payload){
  
-        const { event, data } =  payload;
+		const { event, data } =  payload;
 
-        const { userId, product, qty } = data;
+		const { userId, product, qty } = data;
 
-        switch(event){
-            case 'ADD_TO_CART':
-                this.ManageCart(userId,product, qty, false);
-                break;
-            case 'REMOVE_FROM_CART':
-                this.ManageCart(userId,product,qty, true);
-                break;
-            default:
-                break;
-        }
+		switch(event){
+			case 'ADD_TO_CART':
+				this.ManageCart(userId,product, qty, false);
+				break;
+			case 'REMOVE_FROM_CART':
+				this.ManageCart(userId,product,qty, true);
+				break;
+			default:
+				break;
+		}
  
-    }
+	}
 
 	async GetOrderPayload(userId, order, event){
-        
+		
 		if(order) {
 			const payload = {
 				event,
@@ -89,7 +88,7 @@ class ShoppingService {
 		} else {
 			return FormatData({ error: "No order available." });
 		}
-    }
+	}
 }
 
 module.exports = ShoppingService;
