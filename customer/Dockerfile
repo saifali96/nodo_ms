@@ -4,6 +4,8 @@ WORKDIR /app/customer
 
 COPY package.json .
 
+ENV NODE_ENV prod
+
 RUN npm install
 
 COPY . .
