@@ -1,4 +1,4 @@
-from node
+FROM node
 
 WORKDIR /app/customer
 
