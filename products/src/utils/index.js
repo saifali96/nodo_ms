@@ -53,7 +53,8 @@ module.exports.createChannel = async() => {
 		const connection = await amqplib.connect(MSG_BROKER_URL);
 		const channel = await connection.createChannel();
 		await channel.assertExchange(MSG_BROKER_EXCHANGE, "direct", false);
-	
+		
+		console.log("Connected to RabbitMQ.");
 		return channel;
 	} catch (error) {
 		throw error;
@@ -64,7 +65,8 @@ module.exports.createChannel = async() => {
 module.exports.PublishMessage = async (channel, binding_key, message) => {
 	
 	try {
-		await channel.PublishMessage(MSG_BROKER_EXCHANGE, binding_key, Buffer.from(message));
+		await channel.publish(MSG_BROKER_EXCHANGE, binding_key, Buffer.from(message));
+		console.log("Message has been sent: " + message);
 	} catch (error) {
 		throw error;
 	}
