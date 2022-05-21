@@ -1,8 +1,8 @@
 const bcrypt = require('bcrypt');
 const jwt  = require('jsonwebtoken');
-const axios = require("axios");
+const amqplib = require("amqplib");
 
-const { APP_SECRET } = require('../config');
+const { APP_SECRET, MSG_BROKER_URL, MSG_BROKER_EXCHANGE, MSG_BROKER_QUEUE, MSQ_BROKER_SHOPPING_BINDING_KEY } = require('../config');
 
 //Utility functions
 module.exports.GenerateSalt = async() => {
@@ -43,10 +43,48 @@ module.exports.FormatData = (data) => {
         }
     }
 
+// Message broker
 
-module.exports.PublishCustomerEvent = async (payload) => {
+// Create a channel
+module.exports.createChannel = async() => {
 
-	axios.post("http://localhost:8000/customer/app-events", {
-		payload
+	try {
+		
+		const connection = await amqplib.connect(MSG_BROKER_URL);
+		const channel = await connection.createChannel();
+		await channel.assertExchange(MSG_BROKER_EXCHANGE, "direct", false);
+		
+		console.log("Connected to RabbitMQ.");
+		return channel;
+	} catch (error) {
+		throw error;
+	}
+}
+
+// Publish to the channel
+module.exports.PublishMessage = async (channel, binding_key, message) => {
+	
+	try {
+		await channel.publish(MSG_BROKER_EXCHANGE, binding_key, Buffer.from(message));
+		console.log(`Message to ${binding_key} has been sent: ${message}`);
+	} catch (error) {
+		throw error;
+	}
+}
+
+// Subscribe to the messaging queue
+module.exports.SubscribeMessage = async (channel, service) => {
+
+	const appQueue = await channel.assertQueue(MSG_BROKER_QUEUE);
+
+	channel.bindQueue(appQueue.queue, MSG_BROKER_EXCHANGE, MSQ_BROKER_SHOPPING_BINDING_KEY );
+
+	channel.consume(appQueue.queue, data => {
+		console.log("Shopping Message Queue Received Data:");
+		console.log(data.content.toString());
+
+		service.SubscribeEvents(data.content.toString());
+		channel.ack(data);
 	});
+
 }

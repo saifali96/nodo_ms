@@ -66,7 +66,7 @@ module.exports.PublishMessage = async (channel, binding_key, message) => {
 	
 	try {
 		await channel.publish(MSG_BROKER_EXCHANGE, binding_key, Buffer.from(message));
-		console.log("Message has been sent: " + message);
+		console.log(`Message to ${binding_key} has been sent: ${message}`);
 	} catch (error) {
 		throw error;
 	}
@@ -80,7 +80,7 @@ module.exports.SubscribeMessage = async (channel, service, binding_key) => {
 	channel.bindQueue(appQueue.queue, MSG_BROKER_EXCHANGE, binding_key);
 
 	channel.consume(appQueue.queue, data => {
-		console.log("Message Queue Received Data");
+		console.log("Shopping Message Queue Received Data:");
 		console.log(data.content.toString());
 		channel.ack(data);
 	});
