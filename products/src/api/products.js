@@ -1,8 +1,11 @@
 const ProductService = require("../services/product-service");
-const { PublishCustomerEvent, PublishShoppingEvent } = require("../utils");
+const { PublishMessage } = require("../utils");
 const UserAuth = require("./middlewares/auth");
 
-module.exports = (app) => {
+const { MSQ_BROKER_CUSTOMER_BINDING_KEY, MSQ_BROKER_SHOPPING_BINDING_KEY } = require('../config');
+
+
+module.exports = (app, channel) => {
 	
 	const service = new ProductService();
 
@@ -70,7 +73,8 @@ module.exports = (app) => {
 		
 		try {
 			const { data } = await service.GetProductPayload(_id, { productId: req.body._id }, "ADD_TO_WISHLIST");
-			PublishCustomerEvent(data);
+			PublishMessage(channel, MSQ_BROKER_CUSTOMER_BINDING_KEY, JSON.stringify(data));
+
 			return res.status(200).json({ success: true, message: data.data.product });
 		} catch (err) {
 			next(err);
@@ -84,7 +88,7 @@ module.exports = (app) => {
 
 		try {
 			const { data } = await service.GetProductPayload(_id, { productId }, "REMOVE_FROM_WISHLIST");
-			PublishCustomerEvent(data);
+			PublishMessage(channel, MSQ_BROKER_CUSTOMER_BINDING_KEY, JSON.stringify(data));
 			return res.status(200).json({ success: true, message: data.data.product });
 		} catch (err) {
 			next(err);
@@ -99,8 +103,8 @@ module.exports = (app) => {
 		try {
 
 			const { data } = await service.GetProductPayload(_id, { productId: req.body._id, qty: req.body.qty }, "ADD_TO_CART");
-			PublishCustomerEvent(data);
-			PublishShoppingEvent(data);
+			PublishMessage(channel, MSQ_BROKER_CUSTOMER_BINDING_KEY, JSON.stringify(data));
+			PublishMessage(channel, MSQ_BROKER_SHOPPING_BINDING_KEY, JSON.stringify(data));
 
 			return res.status(200).json({success: true, message: {
 				product: data.data.product,
@@ -119,8 +123,8 @@ module.exports = (app) => {
 		try {
 			const { data } = await service.GetProductPayload(_id, { productId: req.params.id }, "REMOVE_FROM_CART");
 
-			PublishCustomerEvent(data);
-			PublishShoppingEvent(data);
+			PublishMessage(channel, MSQ_BROKER_CUSTOMER_BINDING_KEY, JSON.stringify(data));
+			PublishMessage(channel, MSQ_BROKER_SHOPPING_BINDING_KEY, JSON.stringify(data));
 
 			return res.status(200).json({ success: true, message: {
 				product: data.data.product,
