@@ -1,0 +1,55 @@
+version: '3'
+services:
+
+  
+
+  nginx:
+    build: 
+      dockerfile: Dockerfile
+      context: ./nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+
+  customer:
+    build: 
+      dockerfile: Dockerfile
+      context: ./customer
+    container_name: customer
+    ports:
+      - "8001:8001"
+    restart: always
+    depends_on:
+      - "nginx"
+    volumes:
+      - .:/app
+      - /app/customer/node_modules
+
+  products:
+    build: 
+      dockerfile: Dockerfile
+      context: ./products
+    container_name: products
+    ports:
+      - "8002:8002"
+    restart: always
+    depends_on:
+      - "nginx"
+    volumes:
+      - .:/app
+      - /app/products/node_modules
+
+  shopping:
+    build: 
+      dockerfile: Dockerfile
+      context: ./shopping
+    container_name: shopping
+    ports:
+      - "8003:8003"
+    restart: always
+    depends_on:
+      - "nginx"
+    volumes:
+      - .:/app
+      - /app/shopping/node_modules
